@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="defalut">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="2020/1,weiz,装机," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Ubuntu 18.04.3 LTS + Win10 双系统安装全过程2020年1月 张为 本篇无图，所以不适用于初学的教程，但是如果遇到一些问题，可以根据这里面的步骤、相关名词等信息查阅网上资料。 Win10没啥好说的。一般电脑都会预装正版，不用删。如果你的电脑里什么系统都没有的话，先装Windows。这种闭源的东西要安装我一般也都交给一键完成的软件做了，找一个绿色点的系统、绿色点的USB启动盘">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu 18.04.3 LTS 安装记录">
+<meta property="og:url" content="whitychen.github.io/2020/01/23/ubantu-1/index.html">
+<meta property="og:site_name" content="whitychen">
+<meta property="og:description" content="Ubuntu 18.04.3 LTS + Win10 双系统安装全过程2020年1月 张为 本篇无图，所以不适用于初学的教程，但是如果遇到一些问题，可以根据这里面的步骤、相关名词等信息查阅网上资料。 Win10没啥好说的。一般电脑都会预装正版，不用删。如果你的电脑里什么系统都没有的话，先装Windows。这种闭源的东西要安装我一般也都交给一键完成的软件做了，找一个绿色点的系统、绿色点的USB启动盘">
+<meta property="article:published_time" content="2020-01-23T13:32:31.000Z">
+<meta property="article:modified_time" content="2020-01-23T13:32:31.000Z">
+<meta property="article:author" content="cyl">
+<meta property="article:tag" content="2020&#x2F;1">
+<meta property="article:tag" content="weiz">
+<meta property="article:tag" content="装机">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="whitychen.github.io/2020/01/23/ubantu-1/"/>
+
+
+
+
+
+  <title>Ubuntu 18.04.3 LTS 安装记录 | whitychen</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="defalut">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">whitychen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">垂死病中惊坐起，笑问客从何处来</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="whitychen.github.io/2020/01/23/ubantu-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cyl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="whitychen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ubuntu 18.04.3 LTS 安装记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-23T21:32:31+08:00">
+                2020-01-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/weiz%E7%9A%84%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index">
+                    <span itemprop="name">weiz的记录</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Ubuntu-18-04-3-LTS-Win10-双系统安装全过程"><a href="#Ubuntu-18-04-3-LTS-Win10-双系统安装全过程" class="headerlink" title="Ubuntu 18.04.3 LTS + Win10 双系统安装全过程"></a>Ubuntu 18.04.3 LTS + Win10 双系统安装全过程</h1><p>2020年1月 张为</p>
+<p>本篇无图，所以不适用于初学的教程，但是如果遇到一些问题，可以根据这里面的步骤、相关名词等信息查阅网上资料。</p>
+<h2 id="Win10"><a href="#Win10" class="headerlink" title="Win10"></a>Win10</h2><p>没啥好说的。一般电脑都会预装正版，不用删。如果你的电脑里什么系统都没有的话，先装Windows。这种闭源的东西要安装我一般也都交给一键完成的软件做了，找一个绿色点的系统、绿色点的USB启动盘制作软件就行。</p>
+<h2 id="磁盘分区"><a href="#磁盘分区" class="headerlink" title="磁盘分区"></a>磁盘分区</h2><p>Win10安装好之后可以对磁盘分一下区。右键点击左下角的Windows标志，选择磁盘管理器，进行卷的压缩、增添、删除，建议把给Ubuntu留的地方都不要设置分区，一块硬盘上Windows本身的分区最好相邻。在Windows的安装盘（efi启动分区和C盘所在硬盘）至少要留出200MB的空地方，留给Ubuntu的启动引导用。</p>
+<h2 id="Ubuntu的USB安装盘制作"><a href="#Ubuntu的USB安装盘制作" class="headerlink" title="Ubuntu的USB安装盘制作"></a>Ubuntu的USB安装盘制作</h2><p>清华tuna镜像站里能下载到<a href="https://mirror.tuna.tsinghua.edu.cn/ubuntu-releases/" target="_blank" rel="noopener">Ubuntu发行版安装包</a>，下载速度可能比官网快一点。选择对应版本的desktop版（amd64是正确的），得到一个iso镜像文件。版本上LTS版本会有更长时间的支持，然后如果太新推出来的版本也不要选，可能获得的社区支持太少，有问题不知道怎么解决。</p>
+<p>关于制作安装盘，先格式化一个U盘成MS-DOS FAT32格式（类似这样的名称），然后可以用<a href="https://www.balena.io/etcher/" target="_blank" rel="noopener">Etcher</a>软件一键制作启动盘，如果在mac系统上，可以如下操作：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">diskutil list</span><br><span class="line">sudo diskutil eraseDisk FAT32 my_flashdisk MBRFormat /dev/disk5</span><br><span class="line">hdiutil convert -format UDRW -o path/to/Ubuntu-18-04.img path/to/ubuntu-18.04.3-desktop-amd64.iso</span><br><span class="line">diskutil unmountDisk /dev/disk5</span><br><span class="line">sudo dd <span class="keyword">if</span>=path/to/Ubuntu-18-04.img.dmg of=/dev/rdisk5 bs=1m</span><br><span class="line">diskutil list</span><br><span class="line">sudo diskutil eraseDisk exFAT my_flashdisk MBRFormat /dev/disk6</span><br></pre></td></tr></table></figure>
+<p>下面来逐行解释。第一行显示所有挂载了的磁盘，可以从里面看到所有磁盘及分区，找到你的U盘，假设叫做<code>/dev/disk5</code>(数字会不一样，记得后面的命令都要改)。第二行把这个U盘格式化为FAT32格式，<code>my_flashdisk</code>是格式化之后磁盘的名字，<code>/dev/disk5</code>是要格式化的磁盘。第三行从iso镜像制作了对应的安装程序。第四行是取消了对应的U盘的挂载，但后面还要用，所以不能物理上拔出。第五行类似于一个拷贝，把安装程序拷进了U盘中，具体可以参见<code>man dd</code>。之后再插U盘系统会提示U盘无法识别，是正常的，选择推出即可。最后两行是系统安装完，不再需要启动盘之后对U盘的恢复，先还是要查看一下磁盘，因为每次插拔之后都不一定分配的是一样的编号，然后还是用格式化工具，同样要指定格式化后的磁盘名称和要格式化的磁盘，只是此时的格式可以随便选，个人喜欢选exFAT，会有更好的兼容性和易用性。</p>
+<p>显然这些命令是macOS自带工具，Linux上先参考<a href="https://blog.csdn.net/finnson/article/details/77978243" target="_blank" rel="noopener">这篇博客</a>或搜索更多吧。</p>
+<h2 id="Ubuntu-18-04-3-LTS的安装"><a href="#Ubuntu-18-04-3-LTS的安装" class="headerlink" title="Ubuntu 18.04.3 LTS的安装"></a>Ubuntu 18.04.3 LTS的安装</h2><p>打开电脑，试图打开BIOS（Esc, Del, F1, F2, F10, F12都可能是BIOS启动按键）。如果你发现不闪主板厂商/整机厂商的标志直接进Windows的话，可能需要再Windows里关闭快速启动/安全启动。</p>
+<p>假设你已经成功进入了BIOS，在启动顺序里，把USB启动放到最前面，或者也可能是外置CD/DVD启动，也放到前面，重启一下。如果有问题就尝试把安全启动 (Secure boot) 关掉。</p>
+<p>正确的情况应当是得到试用Ubuntu、安装Ubuntu和一些其它选项。担心出问题的可以先试用一下，试用完毕后双击桌面上的安装程序开始安装。安装的时候先选择语言地区网络，然后到了安装选项，一般就选正常安装 (normal) 就行，如果希望对软件有更大的掌控的话选最简安装 (minimal)，底下的两个勾选（是否下载更新和是否安装一些第三方软件）可选可不选。我在安装的时候选择的语言是英语，地区点在了中国，貌似官方源设置在国内了 (cn.archive.ubuntu.com)，下载速度应该不会太慢。</p>
+<p>关键的是安装类型。如果已经有其它版本或者同版本的Ubuntu打算覆盖或者重装的话，一般不需要改变分区和挂载点，点擦除之前安装过的Ubuntu并重装就行了，很省心，如果没有已经安装的Ubuntu的话，如果打算安装在与Windows系统盘相同的硬盘上，并且信任自动分区的话，可以选择和Windows装在一起的选项，如果不信任或者打算装在其它硬盘上的话，建议是选择最下面的其它 (something else)，进入手动选择分区。手动需选择的时候空的 (free space)是没有分区过的，其它的是已经分区过的，如果选已经分区过的要小心其中的数据会丢失。有下面这么几个目录需要选择挂载点。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">目录</th>
+<th style="text-align:center">建议大小</th>
+<th style="text-align:center">格式</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">/</td>
+<td style="text-align:center">20—30G</td>
+<td style="text-align:center">ext4</td>
+<td style="text-align:left">根目录，全局和系统文件所在位置。大小不要太小就行，如果磁盘空间大可以分配更多。</td>
+</tr>
+<tr>
+<td style="text-align:left">/boot</td>
+<td style="text-align:center">200M</td>
+<td style="text-align:center">ext4</td>
+<td style="text-align:left">启动引导程序。<strong>必须</strong>和Windows启动引导程序放在同一块硬盘下。</td>
+</tr>
+<tr>
+<td style="text-align:left">swap</td>
+<td style="text-align:center">8G</td>
+<td style="text-align:center">swap</td>
+<td style="text-align:left">交换空间。</td>
+</tr>
+<tr>
+<td style="text-align:left">/tmp</td>
+<td style="text-align:center">5G</td>
+<td style="text-align:center">ext4</td>
+<td style="text-align:left">系统临时文件。</td>
+</tr>
+<tr>
+<td style="text-align:left">/home</td>
+<td style="text-align:center">尽量大</td>
+<td style="text-align:center">ext4</td>
+<td style="text-align:left">所有用户的个人目录。如果没有特殊情况的话大部分数据都在这里了。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="双系统启动引导"><a href="#双系统启动引导" class="headerlink" title="双系统启动引导"></a>双系统启动引导</h2><p>在BIOS里把两个系统启动引导分区对应硬盘的启动顺序放在最前面，如果可以选的话Ubuntu应该在Windows前面，GRUB引导启动。正常情况下应该出现GNU GRUB的界面，第一个选项是Ubuntu，后面会有Windows的选项。如果这样启动不起来的话把Windows放回前面，在Windows系统下尝试EasyBCD等工具修复启动引导。</p>
+<p>至此，系统已经安装完毕可以使用，接下来一篇我会写一些我比较喜欢的配置，包含的会比较杂，有些也是积累了很久的配置，希望能有一两个配置有所帮助，我就很满意了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/2020-1/" rel="tag"># 2020/1</a>
+          
+            <a href="/tags/weiz/" rel="tag"># weiz</a>
+          
+            <a href="/tags/%E8%A3%85%E6%9C%BA/" rel="tag"># 装机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/23/weiz/" rel="next" title="从 dfs 到 dlx：快速解数独与更多">
+                <i class="fa fa-chevron-left"></i> 从 dfs 到 dlx：快速解数独与更多
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/23/ubantu/" rel="prev" title="Ubuntu 18.04.3 LTS 配置记录">
+                Ubuntu 18.04.3 LTS 配置记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">cyl</p>
+              <p class="site-description motion-element" itemprop="description">blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-18-04-3-LTS-Win10-双系统安装全过程"><span class="nav-number">1.</span> <span class="nav-text">Ubuntu 18.04.3 LTS + Win10 双系统安装全过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Win10"><span class="nav-number">1.1.</span> <span class="nav-text">Win10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#磁盘分区"><span class="nav-number">1.2.</span> <span class="nav-text">磁盘分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ubuntu的USB安装盘制作"><span class="nav-number">1.3.</span> <span class="nav-text">Ubuntu的USB安装盘制作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ubuntu-18-04-3-LTS的安装"><span class="nav-number">1.4.</span> <span class="nav-text">Ubuntu 18.04.3 LTS的安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双系统启动引导"><span class="nav-number">1.5.</span> <span class="nav-text">双系统启动引导</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cyl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

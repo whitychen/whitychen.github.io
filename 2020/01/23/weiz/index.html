@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="defalut">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="2020/1,weiz," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从 dfs 到 dlx：快速解数独与更多2020 年 1 月 张为 写在前面此文是因为程序设计基础有一个课堂的大作业是解数独和生成数独，碰巧我也做过这个问题，因此也作为对 dlx 的一个总结，大致整理如下。欢迎各位提出更多的想法和建议。 这篇文章先介绍了 dfs 和启发式搜索解数独，然后引入了 Knuth 发明的 dlx 算法，之后以数独的变种——蜂巢数独为例子介绍了 dlx 可以做的更多拓展，接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 dfs 到 dlx：快速解数独与更多">
+<meta property="og:url" content="whitychen.github.io/2020/01/23/weiz/index.html">
+<meta property="og:site_name" content="whitychen">
+<meta property="og:description" content="从 dfs 到 dlx：快速解数独与更多2020 年 1 月 张为 写在前面此文是因为程序设计基础有一个课堂的大作业是解数独和生成数独，碰巧我也做过这个问题，因此也作为对 dlx 的一个总结，大致整理如下。欢迎各位提出更多的想法和建议。 这篇文章先介绍了 dfs 和启发式搜索解数独，然后引入了 Knuth 发明的 dlx 算法，之后以数独的变种——蜂巢数独为例子介绍了 dlx 可以做的更多拓展，接">
+<meta property="article:published_time" content="2020-01-23T13:32:30.000Z">
+<meta property="article:modified_time" content="2020-01-23T13:32:30.000Z">
+<meta property="article:author" content="cyl">
+<meta property="article:tag" content="2020&#x2F;1">
+<meta property="article:tag" content="weiz">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="whitychen.github.io/2020/01/23/weiz/"/>
+
+
+
+
+
+  <title>从 dfs 到 dlx：快速解数独与更多 | whitychen</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="defalut">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">whitychen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">垂死病中惊坐起，笑问客从何处来</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="whitychen.github.io/2020/01/23/weiz/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cyl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="whitychen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从 dfs 到 dlx：快速解数独与更多</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-23T21:32:30+08:00">
+                2020-01-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/weiz%E7%9A%84%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index">
+                    <span itemprop="name">weiz的记录</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="从-dfs-到-dlx：快速解数独与更多"><a href="#从-dfs-到-dlx：快速解数独与更多" class="headerlink" title="从 dfs 到 dlx：快速解数独与更多"></a>从 dfs 到 dlx：快速解数独与更多</h1><p>2020 年 1 月 张为</p>
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>此文是因为程序设计基础有一个课堂的大作业是解数独和生成数独，碰巧我也做过这个问题，因此也作为对 dlx 的一个总结，大致整理如下。欢迎各位提出更多的想法和建议。</p>
+<p>这篇文章先介绍了 dfs 和启发式搜索解数独，然后引入了 Knuth 发明的 dlx 算法，之后以数独的变种——蜂巢数独为例子介绍了 dlx 可以做的更多拓展，接着从集合论中相容关系的视角简单思考了一下 dlx 矩阵的一种设计方法，最后简要介绍了我采用的题面生成方法，以覆盖我目前在这方面做过的尝试和实践。</p>
+<p>这里面的绝大部分代码内容都可以在我<a href="https://github.com/weiz0823/dlx" target="_blank" rel="noopener">dlx 的 github 仓库</a>中看到。<br><a id="more"></a></p>
+<h2 id="数独"><a href="#数独" class="headerlink" title="数独"></a>数独</h2><p>一般的 9*9 的<a href="https://baike.baidu.com/item/数独/74847" target="_blank" rel="noopener">数独</a> (Sudoku) 是要求在 9*9 的矩阵中填满 1—9，其中满足每行、每列、9 个 3*3 的小方格中数字都不重复，因此都要恰好含有 1—9。已知这样的数独至少要给出 17 个已知数才能保证有唯一的解</p>
+<p>关于数独，有一些<a href="https://en.wikipedia.org/wiki/Sudoku#Mathematics_of_Sudoku" target="_blank" rel="noopener">数据</a>。数独的解的数量大约有$6.67\times 10^{21}$种，如果把旋转、对称、数字重排、行列置换算作重复的话，一共有大约$5.47\times 10^9$种。</p>
+<p>我们定义<strong>最小题面 (minimal puzzle)</strong>为有唯一解，且删掉其中任何一个已知数都没有唯一解的题面。已知有大约$3.10\times 10^{37}$个最小题面，去掉各种对称后是$2.55\times 10^{25}$个。</p>
+<h2 id="解数独的朴素方法-—-dfs"><a href="#解数独的朴素方法-—-dfs" class="headerlink" title="解数独的朴素方法 —- dfs"></a>解数独的朴素方法 —- dfs</h2><p>深度优先搜索（dfs）可以用于解数独，因为我们大多数情况下的目标是先找到一个解，而我们也知道很多情况会很快被剪枝，所以搜索树其实也不是很大，关键在于设计存储数独的状态。</p>
+<p>这里采取的是将数独题面表示为已填的数，行、列、块的候选，和下个状态将要填充的位置（便于回溯）。C++代码如下。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Grid</span> &#123;</span></span><br><span class="line">    <span class="keyword">int</span> grid[<span class="number">9</span>][<span class="number">9</span>];</span><br><span class="line">    <span class="keyword">int</span> cand[<span class="number">3</span>][<span class="number">9</span>];  <span class="comment">// row, column, block candidates</span></span><br><span class="line">    <span class="keyword">int</span> pos;         <span class="comment">// fill position</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中候选数用位来表示，从低位开始第$n+1$位表示$n$是否还可选，无关位置为 0。这样设计是考虑到填充一个数实际直接影响的是行列块剩下的可选数，而每个位置的可选数可以通过位运算<code>row_cand &amp; column_cand &amp; block_cand</code>直接得到。</p>
+<p>填充位置从 0—80，已填数表中未填数置为 0。</p>
+<p>状态表示设计完，我们考虑回溯条件。首先每次填完一个数之后检查整个盘面，对于每一个未填的格，如果这一格没有能填的数就回溯，否则继续搜索。由于是朴素（暴力）dfs，不过多考虑。</p>
+<p>搜索的时候就从左上角开始，向右向下对没填过的格依次从小到大填能填的数，这一格的所有可能性填完了都不行就回溯。每次填完后修改对应行列块的候选，寻找下一个能填的格，如果发现全满那么就相当于找到了一个解，执行存储这个解的过程，如果还需要找解就回溯，否则退出搜索过程。不满的话把<code>pos</code>置为下一个要填的位置，然后把盘面转移到下一层，继续搜索。</p>
+<p>检查和搜索部分的代码如下。这里执行的是最多找 2 个解，更多解的做法是一样的，只要有足够的空间存储。全局变量<code>counter</code>执行了记录当前所在层数的功能，因此函数不必传参。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">Grid grids[<span class="number">85</span>];</span><br><span class="line"><span class="keyword">int</span> counter = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> solution_counter = <span class="number">0</span>;</span><br><span class="line">Grid solutions[<span class="number">2</span>];  <span class="comment">// 2 solutions at most</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// check grid at current counter, 0 for ok</span></span><br><span class="line">    <span class="keyword">int</span> r, c, b;</span><br><span class="line">    <span class="keyword">for</span> (r = <span class="number">0</span>; r &lt; <span class="number">9</span>; ++r)</span><br><span class="line">        <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; <span class="number">9</span>; ++c) &#123;</span><br><span class="line">            <span class="keyword">if</span> (grids[counter].grid[r][c] &gt; <span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">            b = r / <span class="number">3</span> * <span class="number">3</span> + c / <span class="number">3</span>;</span><br><span class="line">            <span class="keyword">if</span> ((grids[counter].cand[<span class="number">0</span>][r] &amp; grids[counter].cand[<span class="number">1</span>][c] &amp;</span><br><span class="line">                 grids[counter].cand[<span class="number">2</span>][b]) == <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (counter &lt; <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">// choose pos for the next layer, but don't choose number</span></span><br><span class="line">    <span class="keyword">int</span> pos = grids[counter].pos;</span><br><span class="line">    <span class="keyword">int</span> r = pos / <span class="number">9</span>, c = pos % <span class="number">9</span>;</span><br><span class="line">    <span class="keyword">int</span> b = r / <span class="number">3</span> * <span class="number">3</span> + c / <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">int</span> num = grids[counter].grid[r][c];</span><br><span class="line">    <span class="keyword">int</span> cand = grids[counter].cand[<span class="number">0</span>][r] &amp; grids[counter].cand[<span class="number">1</span>][c] &amp;</span><br><span class="line">               grids[counter].cand[<span class="number">2</span>][b];</span><br><span class="line">    <span class="keyword">int</span> off = num + <span class="number">1</span>;</span><br><span class="line">    cand &gt;&gt;= off;</span><br><span class="line">    ++counter;</span><br><span class="line">    <span class="keyword">while</span> (cand &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">memcpy</span>(&amp;grids[counter], &amp;grids[counter - <span class="number">1</span>], <span class="keyword">sizeof</span>(Grid));</span><br><span class="line">        <span class="keyword">while</span> (!(cand &amp; <span class="number">1</span>)) &#123;</span><br><span class="line">            ++off;</span><br><span class="line">            cand &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        grids[counter].grid[r][c] = off;</span><br><span class="line">        grids[counter].cand[<span class="number">0</span>][r] ^= <span class="number">1</span> &lt;&lt; off;</span><br><span class="line">        grids[counter].cand[<span class="number">1</span>][c] ^= <span class="number">1</span> &lt;&lt; off;</span><br><span class="line">        grids[counter].cand[<span class="number">2</span>][b] ^= <span class="number">1</span> &lt;&lt; off;</span><br><span class="line">        <span class="keyword">while</span> (pos &lt; <span class="number">81</span> &amp;&amp; grids[counter].grid[pos / <span class="number">9</span>][pos % <span class="number">9</span>] &gt; <span class="number">0</span>) ++pos;</span><br><span class="line">        <span class="keyword">if</span> (pos == <span class="number">81</span>) &#123;</span><br><span class="line">            <span class="built_in">memcpy</span>(solutions + solution_counter, grids + counter, <span class="keyword">sizeof</span>(Grid));</span><br><span class="line">            ++solution_counter;</span><br><span class="line">            <span class="keyword">if</span> (solution_counter == <span class="number">2</span>) <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        grids[counter].pos = pos;</span><br><span class="line">        <span class="keyword">if</span> (!check()) dfs();</span><br><span class="line">        <span class="keyword">if</span> (solution_counter == <span class="number">2</span>) <span class="keyword">return</span>;</span><br><span class="line">        ++off;</span><br><span class="line">        cand &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    --counter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>开始搜索的时候要求第 0 层按照已知数设置好所有行列块的候选，选定开始的第一个填充位置。再加上文件头和输入输出主函数如下，三部分代码合起来就可以编译运行了。<a href="https://github.com/weiz0823/dlx/blob/master/compare/sudoku_dfs.cc" target="_blank" rel="noopener">整体代码在此</a>。接受的输入是无空格的一行 81 个字符，非 1—9 的就视为未知格，<code>.-0</code>都是建议的未知数方式。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">string</span> str;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"input grid: "</span>);</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; str;</span><br><span class="line">    <span class="keyword">auto</span> start_time = chrono::high_resolution_clock::now();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; <span class="number">81</span>; ++i)</span><br><span class="line">        <span class="keyword">if</span> (str[i] &gt;= <span class="string">'1'</span> &amp;&amp; str[i] &lt;= <span class="string">'9'</span>) &#123;</span><br><span class="line">            grids[<span class="number">0</span>].grid[i / <span class="number">9</span>][i % <span class="number">9</span>] = str[i] - <span class="string">'0'</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">int</span> r, c, b;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">9</span>; ++i) &#123;</span><br><span class="line">        grids[<span class="number">0</span>].cand[<span class="number">0</span>][i] = ((<span class="number">1</span> &lt;&lt; <span class="number">9</span>) - <span class="number">1</span>) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        grids[<span class="number">0</span>].cand[<span class="number">1</span>][i] = ((<span class="number">1</span> &lt;&lt; <span class="number">9</span>) - <span class="number">1</span>) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        grids[<span class="number">0</span>].cand[<span class="number">2</span>][i] = ((<span class="number">1</span> &lt;&lt; <span class="number">9</span>) - <span class="number">1</span>) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (r = <span class="number">0</span>; r &lt; <span class="number">9</span>; ++r)</span><br><span class="line">        <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; <span class="number">9</span>; ++c) &#123;</span><br><span class="line">            b = r / <span class="number">3</span> * <span class="number">3</span> + c / <span class="number">3</span>;</span><br><span class="line">            grids[<span class="number">0</span>].cand[<span class="number">0</span>][r] ^= <span class="number">1</span> &lt;&lt; grids[<span class="number">0</span>].grid[r][c];</span><br><span class="line">            grids[<span class="number">0</span>].cand[<span class="number">1</span>][c] ^= <span class="number">1</span> &lt;&lt; grids[<span class="number">0</span>].grid[r][c];</span><br><span class="line">            grids[<span class="number">0</span>].cand[<span class="number">2</span>][b] ^= <span class="number">1</span> &lt;&lt; grids[<span class="number">0</span>].grid[r][c];</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">int</span> pos = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (pos &lt; <span class="number">81</span> &amp;&amp; grids[<span class="number">0</span>].grid[pos / <span class="number">9</span>][pos % <span class="number">9</span>] &gt; <span class="number">0</span>) ++pos;</span><br><span class="line">    counter = <span class="number">0</span>;</span><br><span class="line">    grids[<span class="number">0</span>].pos = pos;</span><br><span class="line">    dfs();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; solution_counter; ++i) &#123;</span><br><span class="line">        <span class="keyword">for</span> (r = <span class="number">0</span>; r &lt; <span class="number">9</span>; ++r) &#123;</span><br><span class="line">            <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; <span class="number">9</span>; ++c) &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"%d"</span>, solutions[i].grid[r][c]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">auto</span> end_time = chrono::high_resolution_clock::now();</span><br><span class="line">    <span class="keyword">auto</span> duration = end_time - start_time;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d solutions found in %.3fms.\n"</span>, solution_counter,</span><br><span class="line">           duration.count() / <span class="number">1e6</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h3><p>测试数据为</p>
+<blockquote>
+<p>.2..5.6.8…7..4…..1.3….6..4….3……5……..1.7..3.5………2……8….</p>
+</blockquote>
+<p>预期的结果应当是</p>
+<blockquote>
+<p>127954638536728491498163527961547382384291756275836914742315869813679245659482173</p>
+</blockquote>
+<p>在这个程序上测试耗时 51 毫秒。</p>
+<p>是唯一解的。所以找两个解相当于搜索整个搜索树。这个测试样例是从网上一个说是人解很难的题目中挑出来机解耗时也相当长的，需要遍历的搜索树相当大的。对于大部分计算机解法都比较耗时，人解应该也比较困难（没试过，欢迎尝试并反馈）。</p>
+<p>更多的非平凡的测试样例<a href="https://github.com/weiz0823/dlx/tree/master/data/sudoku" target="_blank" rel="noopener">见此</a>，绝大部分文件末标有数量和来源。也欢迎使用这个仓库里的数独生成器自动生成一些平凡的样例。</p>
+<h2 id="启发式搜索"><a href="#启发式搜索" class="headerlink" title="启发式搜索"></a>启发式搜索</h2><p>自然的优化考虑到启发式搜索，比如先填充可能性数量少的位置，这样能更早剪一些枝。当然，这样的缺点就是每个状态检查的速度要慢下来了，可能反而不划算。不过一般来说还是会有效果。进行一个简单的尝试。</p>
+<p>添加通过启发函数（即候选数数量）寻找最优位置的函数<code>findpos()</code>和启发函数<code>getsize()</code>如下。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getsize</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> size = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (num &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> ((num &amp; <span class="number">1</span>) == <span class="number">0</span>) num &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        ++size;</span><br><span class="line">        num &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> size;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">findpos</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> best_pos = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (best_pos &lt; <span class="number">81</span> &amp;&amp; grids[counter].grid[best_pos / <span class="number">9</span>][best_pos % <span class="number">9</span>] &gt; <span class="number">0</span>)</span><br><span class="line">        ++best_pos;</span><br><span class="line">    <span class="keyword">if</span> (best_pos == <span class="number">81</span>) <span class="keyword">return</span> <span class="number">81</span>;</span><br><span class="line">    <span class="keyword">int</span> r = best_pos / <span class="number">9</span>, c = best_pos % <span class="number">9</span>;</span><br><span class="line">    <span class="keyword">int</span> b = r / <span class="number">3</span> * <span class="number">3</span> + c / <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">int</span> min_size =</span><br><span class="line">        getsize(grids[counter].cand[<span class="number">0</span>][r] &amp; grids[counter].cand[<span class="number">1</span>][c] &amp;</span><br><span class="line">                grids[counter].cand[<span class="number">2</span>][b]);</span><br><span class="line">    <span class="keyword">if</span> (min_size &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">        grids[counter].pos = best_pos;</span><br><span class="line">        <span class="keyword">if</span> (min_size)</span><br><span class="line">            <span class="keyword">return</span> best_pos;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// hint for backtrack</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> tmp_size;</span><br><span class="line">    <span class="keyword">for</span> (; r &lt; <span class="number">9</span>; ++r)</span><br><span class="line">        <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; <span class="number">9</span>; ++c) &#123;</span><br><span class="line">            <span class="keyword">if</span> (grids[counter].grid[r][c] &gt; <span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">            b = r / <span class="number">3</span> * <span class="number">3</span> + c / <span class="number">3</span>;</span><br><span class="line">            tmp_size =</span><br><span class="line">                getsize(grids[counter].cand[<span class="number">0</span>][r] &amp; grids[counter].cand[<span class="number">1</span>][c] &amp;</span><br><span class="line">                        grids[counter].cand[<span class="number">2</span>][b]);</span><br><span class="line">            <span class="keyword">if</span> (min_size &gt; tmp_size) &#123;</span><br><span class="line">                min_size = tmp_size;</span><br><span class="line">                best_pos = r * <span class="number">9</span> + c;</span><br><span class="line">                <span class="keyword">if</span> (min_size &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                    grids[counter].pos = best_pos;</span><br><span class="line">                    <span class="keyword">if</span> (min_size)</span><br><span class="line">                        <span class="keyword">return</span> best_pos;</span><br><span class="line">                    <span class="keyword">else</span></span><br><span class="line">                        <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// hint for backtrack</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    grids[counter].pos = best_pos;</span><br><span class="line">    <span class="keyword">return</span> best_pos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (min_size &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">    grids[counter].pos = best_pos;</span><br><span class="line">    <span class="keyword">if</span> (min_size)</span><br><span class="line">        <span class="keyword">return</span> best_pos;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// hint for backtrack</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这一跳出条件相当重要。一开始我忘了写这一部分，用上节的测试数据测出来 37 毫秒，补上之后 25 毫秒。其它部分的修改包括<code>check()</code>的时候可以从这个<code>grids[counter].pos</code>之后开始，因为之前的部分已经检查过了，并且在<code>dfs()</code>里面有一些小的变动。具体的代码不放在本文中了，看<a href="https://github.com/weiz0823/dlx/blob/master/compare/sudoku_heu.cc" target="_blank" rel="noopener">这里</a>就行。</p>
+<h2 id="数独手解方法？"><a href="#数独手解方法？" class="headerlink" title="数独手解方法？"></a>数独手解方法？</h2><p>我们知道数独有一套手解的方法，（貌似）不用通过任何尝试和回溯就可以解决至少是绝大部分唯一解的数独。但是这种办法对于人来说相对于尝试是非常快的，因为人可以扫一眼就快速看出来哪些位置有一些简单的填写或者候选数消除，复杂的手解方法也只需要一些仔细观察。但对于计算机来说要对每种方法都不断遍历整个盘面，而其中能够产生效果的操作并不多。虽然这种办法少了搜索树，但由于不断遍历所耗费的时间，这种方法的优化并不多，弊端在于带来编写代码的复杂性。当然，这种方法并不会很慢。但考虑到 dfs 的速度已经可以接受了，所以并没有在上面的启发式搜索中嵌入一部分简单的手解方法。（试过，会快，具体多快忘了，但不如 dlx 快。）</p>
+<h2 id="dlx，它来了"><a href="#dlx，它来了" class="headerlink" title="dlx，它来了"></a>dlx，它来了</h2><p><strong>舞蹈链算法</strong> (<a href="https://en.wikipedia.org/wiki/Dancing_Links" target="_blank" rel="noopener">dancing links</a>, DLX) 是高德纳 (Donald Knuth，中文名是单独取的，不是音译) 在 2000 年发明的基于十字双向循环链表的解决精确覆盖问题的一种普遍算法。<a href="https://arxiv.org/abs/cs/0011047" target="_blank" rel="noopener">论文在此</a>。</p>
+<h3 id="啥是精确覆盖问题"><a href="#啥是精确覆盖问题" class="headerlink" title="啥是精确覆盖问题"></a>啥是精确覆盖问题</h3><p><strong>精确覆盖问题</strong>就是一类问题，它可以被表示为一个 0-1 矩阵，矩阵的每列表示一个限制条件，每行表示一个候选。其中要选出一些行，使得每列恰好有一个 1，也就是这些行恰好覆盖所有列。</p>
+<h3 id="啥是十字双向循环链表"><a href="#啥是十字双向循环链表" class="headerlink" title="啥是十字双向循环链表"></a>啥是十字双向循环链表</h3><p>这名字瞎取的。原论文说，dlx 的精髓就在于这个链表。</p>
+<p>先解释一下这个链表长什么样。首先双向代表每个节点既有指向后继 (successor) 的指针，也有指向前驱 (predecessor) 的指针。一般的链表实现都是双向链表，因为能够双向迭代（迭代就是遍历）非常方便。循环代表这个链表没有头和尾，串成一个圈。这样的好处是不需要存储头和尾，用的时候任意指定一个位置作为头尾就可以遍历。在 dlx 中遍历的起始点的确是需要一定变化的，这样也比较方便。十字是因为在上面精确覆盖问题所述的矩阵中行需要链串起来，列需要链串起来，这样就能确定每个 1 的位置，真正形成一个表格，也是矩阵。</p>
+<p>然后就到了 dlx 最重要的部分，对链表的操作。这里大致引述原论文的意思。一般我们从双向链表中删除一个节点需要改变 4 个指针，思路如下。</p>
+<script type="math/tex; mode=display">this.pre.suc \gets this.suc \qquad this.suc.pre \gets this.pre</script><script type="math/tex; mode=display">this.suc \gets NULL \qquad this.pre \gets NULL</script><p>其中第一行的两个操作负责整理链表中其它指针，第二行的两个操作负责让这个节点脱离链表。dlx 的思路就是，我能不能只执行第一行，不执行第二行呢？有了第一行，链表的双向迭代已经没有问题了，而不执行第二行让回溯非常方便，因为我只要找到<code>this</code>，我就知道它的位置，加回去就完事了。然而这时候如果<code>pre</code>和<code>suc</code>不是相邻的，那岂不是就出问题了？所以 dlx 中的操作必须完全严格按照栈的顺序，先进后出，就能保证<code>pre</code>和<code>suc</code>一定是相邻的，回溯后的状态完全恢复。</p>
+<p>至此，我们只要根据实际问题构建合适的矩阵，就可以在这个矩阵中进行 dfs 了。搜索的思路就是先选择一列，进入新的一层，因为这列一定要被覆盖，所以可以遍历这列中的所有行，遍历完毕就结束了。每次选择一行，将这行对应的列全部删除，因为选定这行的时候这些条件已经被满足，并将这些列中包含的行也全部删除，因为它们与已经选定的行有冲突。所以需要重复的操作就是删除指定的列和其所包含的行，这一操作称为<strong>覆盖 (cover)</strong>。</p>
+<p>如此，一层的修改已经结束。如果此时所有列都已经被覆盖，那就说明找到了一个解；如果有未被覆盖的列没有行了，就说明此时无解，应当回溯。回溯的过程严格按照之前覆盖顺序的逆序进行，将节点对应的指针恢复，称为取消<strong>覆盖 (uncover)</strong>。</p>
+<h2 id="dlx-的实现思路"><a href="#dlx-的实现思路" class="headerlink" title="dlx 的实现思路"></a>dlx 的实现思路</h2><p>首先有每个节点的结构如下。现有 6 个指针，4 个指向上下左右形成十字，还有行、列的指针指向特殊的行、列节点，相当于规定了循环链表一般的头和尾。<code>size_</code>用来表示列中节点数量，用于后续的启发式搜索，<code>covered_</code>用来指示这一节点是否被覆盖。不过，其实也有指针检测的方法来检查是否被覆盖。<code>type_</code>是在拓展的 dlx 算法中使用，在后文中详细介绍。在一般的 dlx 算法中<code>type_</code>均为 1。为了与循环链表统一，所有的指针默认指向自己。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">DlxCell</span> &#123;</span></span><br><span class="line">    <span class="comment">// up, down, left, right</span></span><br><span class="line">    DlxCell *u_ = <span class="keyword">this</span>, *d_ = <span class="keyword">this</span>, *l_ = <span class="keyword">this</span>, *r_ = <span class="keyword">this</span>;</span><br><span class="line">    DlxCell *row_ = <span class="keyword">this</span>, *col_ = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">int</span> size_ = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">bool</span> covered_ = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// column type: 1) compulsory, 0) optional</span></span><br><span class="line">    <span class="keyword">int</span> type_ = <span class="number">1</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>整个 dlx 矩阵的结构如下。首先有一个表头作为构建整个表格的基础。头的一整行是所有的列节点，头的一整列是所有的行节点，其它的节点只需要添加到相应的行节点对应的行中，相应的列节点对应的列中，整个表格就构建完成。</p>
+<p><code>DlxStack</code>是一个指针的栈，基本相同于<code>std::stack&lt;DlxCell*&gt;</code>，不过是用动态数组实现的，因为对于每个确定好的 dlx 矩阵，这个栈的最大大小可以计算或估计出来，所以只需要一次内存分配，插删会很快。其次，在存储解的过程中需要对栈<code>choose_stack_</code>进行遍历，获取选定的行。这三个栈中<code>reserve_stack_</code>用来表示问题中已知的、不能改动的部分，<code>choose_stack_</code>用来表示选定的部分，也是回溯的关键，<code>cover_stack_</code>存储依次覆盖的列，在基础的 dlx 过程中很容易执行反向的取消覆盖过程，因为对于列的重复覆盖不会产生太大的问题，然而扩展的 dlx 过程中就需要用这个栈来检查是否是严格逆序的取消覆盖过程，因为扩展的 dlx 中重复覆盖一列可能造成问题，需要保证唯一覆盖，这样取消覆盖的顺序就无法保证了。</p>
+<p><code>choose_count_</code>记录了搜索树遍历的节点数量，一定程度上反映了问题的复杂度，仅仅是简单的计数。<code>sort_rows_</code>指示是否进行行的启发式排序，排序后或许能够减少找到第一个解所需要的时间（但一定不会减少找到所有解所需要的时间）。基本的 dlx 过程并不包括，在下文会详细叙述。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">DlxGrid</span> &#123;</span></span><br><span class="line">    DlxCell head_;</span><br><span class="line">    DlxStack reserve_stack_;</span><br><span class="line">    DlxStack choose_stack_;</span><br><span class="line">    DlxStack cover_stack_;</span><br><span class="line">    <span class="keyword">int</span> choose_count_ = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">bool</span> sort_rows_ = <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="dlx-搜索过程"><a href="#dlx-搜索过程" class="headerlink" title="dlx 搜索过程"></a>dlx 搜索过程</h3><p>对于每一个问题，设置好整个矩阵，并预置好已知部分后，就可以开始搜索。为了追求更好的性能，采用启发式搜索，思路基本与上文中数独的朴素启发式搜索一样。每进入一层，遍历所有列，根据一定条件找到更好的列，如果满足某种跳出条件就结束遍历。先覆盖这一列，因为选定了一定会被满足，选择这列中的一行，覆盖行中节点对应的列。如果没有列了，说明找到解，如果还需要找解就继续搜索，如果存在一列没有行了，说明此时无解需要回溯（回溯不一定需要及时，应当回溯的时候进入下一层只会导致过多搜索，然而可能减少检查的次数反而加快速度）。否则进入下一层继续搜索。选完所有行返回上一层。</p>
+<h2 id="dlx-用于解数独"><a href="#dlx-用于解数独" class="headerlink" title="dlx 用于解数独"></a>dlx 用于解数独</h2><p>对于每类问题是需要人工设计列对应的需满足限制条件和行对应的候选的。数独的候选就是每个格 1—9，一共 729 个候选。限制条件包括：每格有数，每行、列、块有 1—9，一共 324 个限制条件。注意，由于只有 0-1 矩阵中的 1 对应 dlx 矩阵中的节点，所以这个矩阵往往是稀疏的，比如解数独问题中的每行只有 4 个节点，对应 4 个能够满足的限制条件。设置好 dlx 矩阵，对于每个题面做好预置的已知数，就可以开始搜索了！搜索结束先按照栈顺序清空所有的选择，再清空所有的预置，就恢复了整个矩阵，可以迎接下一个题面了。</p>
+<p>在前面写的测试用的数独题面上，dlx 需要 6 毫秒。回顾一下，暴力 dfs 用 51 毫秒，启发式搜索用 25 毫秒。其实 dlx 也并不是优化很多，个人分析是数独能够位压缩，为朴素方法省去了不少时间。但是 dlx 提供了一种更普遍的解决方案，在后文中，我们更会拓展它能够解决的问题。</p>
+<h2 id="dlx-的一个小改变-—-行排序"><a href="#dlx-的一个小改变-—-行排序" class="headerlink" title="dlx 的一个小改变 —- 行排序"></a>dlx 的一个小改变 —- 行排序</h2><p>我们想要找到一个先选择的行，又想要存储着这个顺序，保证搜索过程是遍历所有行，又想要在回溯的时候恢复原来的顺序。最简单的办法就是把这些节点的指针拿一个数组存着，原来的表格不动。这就会浪费一些空间，而我们本来就是双向循环链表，有两个遍历方向。那能不能两个遍历方向的顺序不一样呢？这就与 dlx 核心的思想是一致的，dlx 核心就是从此节点能找回原来的前驱和后继，而原来的前驱和后继处于新的状态，没有把此节点连进链表里。而我们是一个方向储存着原来的方向，另一个方向是我们排好序的方向。如果我们能找到某种行的启发方法的话，我们就可以给行进行排序，优先选择可以更快找到解到行。回溯的时候按照另外一个没有改变的方向就可以恢复原来的顺序。</p>
+<p>然而这只是个想法，目前还没有发现行排序能够显著优化的问题，而且如果要遍历整个搜索树就一点用也没有了。</p>
+<h2 id="dlx-的更多可能性-—-蜂巢数独"><a href="#dlx-的更多可能性-—-蜂巢数独" class="headerlink" title="dlx 的更多可能性 —- 蜂巢数独"></a>dlx 的更多可能性 —- 蜂巢数独</h2><p>这里我不打算直接从算法切入，而是先介绍这个改变所能应用上的例子，在例子中引出需要对 dlx 作出的改变。因为我想到这样的改变（貌似有一部分是看到了别人的想法，忘记哪些是了）就是因为这个应用场景，并且发觉这个应用场景并不算很特殊。另外也是换换切入的思路。</p>
+<h3 id="蜂巢数独"><a href="#蜂巢数独" class="headerlink" title="蜂巢数独"></a>蜂巢数独</h3><p><a href="http://www.sudocue.net/hanidoku_home.php" target="_blank" rel="noopener">蜂巢数独 (Hanidoku)</a>是要求在最长对角线长度为 9 个正六边形小格的一个正六边形蜂巢中填入 1—9，要求每一行，每一个倾斜 60 度的斜线，每一个反向倾斜 60 度的反斜线中数字不重复，且同一条线中的这些数要能够形成<em>连续序列</em>，也就是 43765 是允许的，43865 就是不允许的。一共有 27 条线进行了约束。因为每条线的长度从 5 到 9 不等，所以并不是每一条线中都包含 1—9 的全部数字。</p>
+<p>关于蜂巢数独的题面，通常已知数都很少。在一共 61 个格子中，大多最小题面有 5—10 个已知数不等。5 个已知数已经能保证唯一解，而且这样的题面比 17 个已知数的 9*9 数独要常见的多。不过以上都是自己探索出来的大约数据，可能不一定正确。</p>
+<h3 id="用-dlx-解决它"><a href="#用-dlx-解决它" class="headerlink" title="用 dlx 解决它"></a>用 dlx 解决它</h3><p>候选还是很好办，每一个格子可以从 1—9 中选。我们来思考限制条件。把数独的挪过来，每格有数，每条线 1—9，然后第一个问题就来了。的确 1—9 是不能重复的，但一条线上不一定 1—9 全有，也就是不是所有条件都要覆盖。所以之前的每一列的<code>type_</code>就派上用场了。类型为 0 的列代表不一定要覆盖，所以在每一层搜索要选定一列遍历其所有行的时候，就不选这些不必覆盖的列。而这些列没有行也不要紧，不代表此时需要回溯。这些列仅仅是为了保证不重复覆盖一个条件。</p>
+<p>好的，我们解决了不重复但又不是所有数字都选的问题，然而连续序列的问题还没有解决。连续序列有什么等价条件呢？比如长度为 5 的一条线中选了 1 肯定不选 6、7、8、9，选了 6 肯定不选 1，长度为 7 的序列中选了 2 肯定不选 9。就是距离过远的数肯定不能同时存在。如果这些条件全满足，就一定能保证是连续序列。但是我又不能在选了 1 的这个候选中给这条线有 6、7、8、9 的列下添加节点。因为选 2 的候选中在这条线有 7、8、9 的列下有节点，这样相当于 1 和 2 矛盾，显然是不对的。而我也不能单加一个限制条件把选 1、6、7、8、9 加进去，因为它们也不是两两矛盾的。一种解决方案是给每一个矛盾对加一个限制条件，这也是一种解决方案。这里提出另一种解决方案：在对应的候选行中添加一个节点，而不将这个节点添加进任何列中，只改变这个节点的列指针，这样在选定这行的时候会覆盖对应的列，而其他情况下覆盖这一列的时候不会覆盖这行。这样形成一种单向的满足关系。对应的代码实现中，添加方向为`X’的时候就是仅改变列指针，不添加进列中。这样就可以在不添加额外的限制条件的情况下实现连续序列的条件。</p>
+<p>条件的复杂也带来解决问题的复杂，因为非必选列不能作为回溯的指标，也不能作为选择的列，所以蜂巢数独大约需要平均 10 余毫秒解决一个问题，搜索树大小通常大了很多。</p>
+<h2 id="从集合论和关系的角度看-dlx-和数独"><a href="#从集合论和关系的角度看-dlx-和数独" class="headerlink" title="从集合论和关系的角度看 dlx 和数独"></a>从集合论和关系的角度看 dlx 和数独</h2><p>正巧学习了离散数学，集合论一部分讲到了关系，关系里有覆盖，与 dlx 解决的覆盖问题有一定的相似性。精确覆盖，就是要在不矛盾的情况下填满所有列。我们把矛盾定义成关系。首先，在设置限制条件的时候，不考虑每个题面对应的预置的关系，因为预置实际是最终的解中不可改变的部分。</p>
+<p>集合$A$代表候选的集合，集合$B\subseteq A$是这个问题的一个解，$P$是所有解的集合。定义$A$上的矛盾关系$R=\{<x, y>\mid \lnot(\exists B)(B \in P \land x\in B \land y\in B )\}\cup\{<x, x>\mid x\in A\}$，其中补充的自反部分使得$R$成为一个相容关系，即有自反性和对称性的关系。</x,></x,></p>
+<p>然后我们来找这个关系上的完全覆盖，也就是所有最大相容类（关系图中的完全多边形，而且不是任何一个相容类的真子集）的集合，记作$C$。对于解$B\in P$要求$\forall x, y\in B, x\ne y \Rightarrow <x, y>\notin R$，容易证明这与$\lnot(\exists x)(\exists y)(\exists D)(D\in C\land x\ne y\land x\in D\land y\in D)$是等价的，因为若$xRy$，则$x,y$形成一个相容类，那么一定是某个最大相容类的子集。所以如果我们从每个最大相容类中最多挑一个元素（注意不能并行执行，因为有的两个最大相容类中包含同一个元素，那么挑走共同元素相当于两个最大相容类都不能再挑了），那么形成的集合一定是不矛盾的（但它甚至不一定是解的子集，因为二者矛盾的组合可以导出一些多者矛盾，例如数独的手解方法）。</x,></p>
+<p>注意，这里的生成关系是根据游戏规则先定好与游戏规则等价的$R$，规定$R$上的一些最大相容类中必须要选元素（不可能规定非最大的相容类中必须选一个元素，否则与最大相容类相差的这部分的候选就不可能选了，其它情况暂不在精确覆盖问题中考虑），其它的可选可不选。这样就可以对每个最大相容类构建成 dlx 中的一列，按照是否必选就有必须覆盖和不必覆盖两种列的类型了。</p>
+<h3 id="再看蜂巢数独的条件设计"><a href="#再看蜂巢数独的条件设计" class="headerlink" title="再看蜂巢数独的条件设计"></a>再看蜂巢数独的条件设计</h3><p>我们回顾之前蜂巢数独的条件设计，例如第一行，长度为 5，选 1 和选 6 分别作为一个条件，都不必覆盖，然而我们发现把二者合并，一共 10 个候选是能够组成一个相容类的，而且这是一个最大相容类。这个条件叫做“第一行选 1 或选 6”，它是必须满足的。同样是第一行，“第一行选 1 或选 7”也是一个最大相容类，但它不是必须满足的。还是第一行，选 5 是必须满足的，也可以看出第一行选 5 的这 5 个候选形成的相容类就是最大相容类。我们把每个最大相容类作为一个限制条件，必须满足的条件就增多了。经计算，总的条件数量维持 304 个不变。而总的节点数从 3576 减少到 2856 个。同时我们也不需要不添加进列中的节点了。这也是一种条件设计的方式。</p>
+<p>经测试，这种条件设计方式相比原来的条件设计运行速度大约是 1.5 倍，每个蜂巢数独平均可以控制在 10 毫秒左右。</p>
+<p>这一想法就是在写这一部分的过程中发现的，所以最大相容类的视角有时候可以帮我们优化条件设计，但不一定所有问题中的最大相容类都一定有实际的意义，也不总是能够优化，最终考虑究竟是采取单向覆盖还是最大相容类还是要具体问题具体分析。</p>
+<h2 id="数独与蜂巢数独的生成"><a href="#数独与蜂巢数独的生成" class="headerlink" title="数独与蜂巢数独的生成"></a>数独与蜂巢数独的生成</h2><p>有了运行速度较快的解题程序后，我们可以考虑题目的生成。毕竟计算机解题并不能给人带来太多乐趣，而生成一个给人做的题目还是很有趣的。我们肯定是要保证给出的题目有唯一解的，才是一个合理的题目。一般的想法是先生成一个解，然后挖空，这样肯定能保证有解，然后再去验证解的唯一性即可。但对于 dlx 的结构来说，原先的矩阵代表我什么都没选，所以更方便的方式可能是随机选取一些互相不矛盾的行作为预置，然后再验证这组预置是否有解。注意此时既不能保证有解也不能保证解是唯一的。所以我的想法是一个个选取预置，每选一个就检测一次，如果无解就去掉最后选的这个，再随机选一个。如果多解就保留最后选的这个，继续选。如果恰好有唯一解，那么就可以作为一个合法题面。但为了让题面更具挑战性，也为了更快地生成已知数低于一定数量的题面，我们从这个合法题面的基础上生成最小题面，方法就是根据最小题面的定义，遍历所有已知数，一个个尝试删除，直到某次遍历所有剩余的已知数都不能删除，那就是最小题面。这一方法并不能保证从这个合法题面生成最优的（已知数最少的）最小题面，但常常也能删除一定数量的已知数，加快在强限制下的数独生成。</p>
+<p>对于 9*9 数独，已知数数量限制高于 22 时，很快就可以生成，其中绝大部分已知数数量低于 30，21 和 22 的限制大约都需要几秒一道题，20 的限制就非常碰运气了。其它的估计就没什么可能性了。</p>
+<p>对于蜂巢数独，不限制的时候已知数数量一般在 5—10 左右，限制到已知数数量 5 个也能很快生成，更少的怀疑就没有唯一解了，不过不确认。</p>
+<h2 id="写在后面"><a href="#写在后面" class="headerlink" title="写在后面"></a>写在后面</h2><p>就数独这个问题本身，其实还有很多种有意思的数独游戏。但有些其实就是 9*9 数独的简单变种，比如划分 9 个不规则形状的小格要求不重复。可能这样对人的挑战比较大，因为不规则，但对于 dlx 来说仅仅是需要特殊确定的矩阵设计罢了，限制条件都不需要改变。另外有一些变化比较大的数独，比如数和数独，要求不重复的基础上满足一些格子的数和等于给定值。这里面就是很多不等式的约束来减少可能性的数量，但我相信因为数字组合的数量有限，它们也可以变成精确覆盖问题，只是可能设计起来相当复杂。还有一些涂色类的、连线类的、扫雷类的趣味数独，在益智的基础上也比纯数字多了很多乐趣。这些数独都是我在《变态数独》（[美]罗伯特·艾伦，云南大学出版社，共 4 册）中了解到的，相信网络上也会有很多。</p>
+<p>这里面挑出来进行尝试的除了经典数独之外，之所以用蜂巢数独，是因为它的限制条件的确很有意思，在 dlx 中表示起来既需要额外的思考，也不是特别繁琐，纯数字对计算机也比较友好。还有一种没做但很有意思的是武士数独，是五个标准 9*9 数独，中间一个数独的角落上的 3*3 小方块与周围四个的角落上的小方块共享，也就是要在共享方块的限制下完成五个数独，也是很有趣的。但对于 dlx 来说这就没有任何需要改变的内容了，只是共享方块的候选能够覆盖掉更多限制条件罢了，或许解这么大一个数独比解蜂巢数独还快。当然，读到这里还有兴趣动手尝试的读者可以从这个样例开始了解 dlx，说不定还能够给出更好的思路和优化，也欢迎在我<a href="https://github.com/weiz0823/dlx" target="_blank" rel="noopener">dlx 的 github 仓库</a>中提出和修改。感谢读到这里的各位！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/2020-1/" rel="tag"># 2020/1</a>
+          
+            <a href="/tags/weiz/" rel="tag"># weiz</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/23/1-21/" rel="next" title="改主题">
+                <i class="fa fa-chevron-left"></i> 改主题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/23/ubantu-1/" rel="prev" title="Ubuntu 18.04.3 LTS 安装记录">
+                Ubuntu 18.04.3 LTS 安装记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">cyl</p>
+              <p class="site-description motion-element" itemprop="description">blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#从-dfs-到-dlx：快速解数独与更多"><span class="nav-number">1.</span> <span class="nav-text">从 dfs 到 dlx：快速解数独与更多</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在前面"><span class="nav-number">1.1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数独"><span class="nav-number">1.2.</span> <span class="nav-text">数独</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解数独的朴素方法-—-dfs"><span class="nav-number">1.3.</span> <span class="nav-text">解数独的朴素方法 —- dfs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试结果"><span class="nav-number">1.3.1.</span> <span class="nav-text">测试结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启发式搜索"><span class="nav-number">1.4.</span> <span class="nav-text">启发式搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数独手解方法？"><span class="nav-number">1.5.</span> <span class="nav-text">数独手解方法？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dlx，它来了"><span class="nav-number">1.6.</span> <span class="nav-text">dlx，它来了</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#啥是精确覆盖问题"><span class="nav-number">1.6.1.</span> <span class="nav-text">啥是精确覆盖问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#啥是十字双向循环链表"><span class="nav-number">1.6.2.</span> <span class="nav-text">啥是十字双向循环链表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dlx-的实现思路"><span class="nav-number">1.7.</span> <span class="nav-text">dlx 的实现思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dlx-搜索过程"><span class="nav-number">1.7.1.</span> <span class="nav-text">dlx 搜索过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dlx-用于解数独"><span class="nav-number">1.8.</span> <span class="nav-text">dlx 用于解数独</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dlx-的一个小改变-—-行排序"><span class="nav-number">1.9.</span> <span class="nav-text">dlx 的一个小改变 —- 行排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dlx-的更多可能性-—-蜂巢数独"><span class="nav-number">1.10.</span> <span class="nav-text">dlx 的更多可能性 —- 蜂巢数独</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#蜂巢数独"><span class="nav-number">1.10.1.</span> <span class="nav-text">蜂巢数独</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用-dlx-解决它"><span class="nav-number">1.10.2.</span> <span class="nav-text">用 dlx 解决它</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从集合论和关系的角度看-dlx-和数独"><span class="nav-number">1.11.</span> <span class="nav-text">从集合论和关系的角度看 dlx 和数独</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#再看蜂巢数独的条件设计"><span class="nav-number">1.11.1.</span> <span class="nav-text">再看蜂巢数独的条件设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数独与蜂巢数独的生成"><span class="nav-number">1.12.</span> <span class="nav-text">数独与蜂巢数独的生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在后面"><span class="nav-number">1.13.</span> <span class="nav-text">写在后面</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cyl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="defalut">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="2020/1,weiz,装机," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Ubuntu 18.04.3 LTS 配置记录2020年1月 张为 本篇无图且很简略，所以不适用于初学的教程，但是如果遇到一些问题，可以根据这里面的步骤、相关名词等信息查阅网上资料。 apt换清华源现在默认好像是cn.archive.ubuntu.com了，并不太慢。如果觉得慢的话有国内源可用，清华tuna源的替换方式在这里。搞定之后可以更新一下预装软件包，通过sudo apt update &amp;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu 18.04.3 LTS 配置记录">
+<meta property="og:url" content="whitychen.github.io/2020/01/23/ubantu/index.html">
+<meta property="og:site_name" content="whitychen">
+<meta property="og:description" content="Ubuntu 18.04.3 LTS 配置记录2020年1月 张为 本篇无图且很简略，所以不适用于初学的教程，但是如果遇到一些问题，可以根据这里面的步骤、相关名词等信息查阅网上资料。 apt换清华源现在默认好像是cn.archive.ubuntu.com了，并不太慢。如果觉得慢的话有国内源可用，清华tuna源的替换方式在这里。搞定之后可以更新一下预装软件包，通过sudo apt update &amp;a">
+<meta property="article:published_time" content="2020-01-23T13:32:32.000Z">
+<meta property="article:modified_time" content="2020-01-23T13:32:32.000Z">
+<meta property="article:author" content="cyl">
+<meta property="article:tag" content="2020&#x2F;1">
+<meta property="article:tag" content="weiz">
+<meta property="article:tag" content="装机">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="whitychen.github.io/2020/01/23/ubantu/"/>
+
+
+
+
+
+  <title>Ubuntu 18.04.3 LTS 配置记录 | whitychen</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="defalut">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">whitychen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">垂死病中惊坐起，笑问客从何处来</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="whitychen.github.io/2020/01/23/ubantu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cyl">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="whitychen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Ubuntu 18.04.3 LTS 配置记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-23T21:32:32+08:00">
+                2020-01-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/weiz%E7%9A%84%E8%AE%B0%E5%BD%95/" itemprop="url" rel="index">
+                    <span itemprop="name">weiz的记录</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Ubuntu-18-04-3-LTS-配置记录"><a href="#Ubuntu-18-04-3-LTS-配置记录" class="headerlink" title="Ubuntu 18.04.3 LTS 配置记录"></a>Ubuntu 18.04.3 LTS 配置记录</h1><p>2020年1月 张为</p>
+<p>本篇无图且很简略，所以不适用于初学的教程，但是如果遇到一些问题，可以根据这里面的步骤、相关名词等信息查阅网上资料。</p>
+<h2 id="apt换清华源"><a href="#apt换清华源" class="headerlink" title="apt换清华源"></a>apt换清华源</h2><p>现在默认好像是cn.archive.ubuntu.com了，并不太慢。如果觉得慢的话有国内源可用，清华tuna源的替换方式在<a href="https://mirror.tuna.tsinghua.edu.cn/help/ubuntu/" target="_blank" rel="noopener">这里</a>。搞定之后可以更新一下预装软件包，通过<code>sudo apt update &amp;&amp; sudo apt upgrade</code>。</p>
+<h2 id="咦，好像没有git？"><a href="#咦，好像没有git？" class="headerlink" title="咦，好像没有git？"></a>咦，好像没有git？</h2><p>Ubuntu两大生命之源：apt和git。怎么能没有git，我还要跑开源代码呢！赶紧<code>sudo apt-get install git</code>。</p>
+<h2 id="开始让系统可用-—-搞定显卡驱动和显示"><a href="#开始让系统可用-—-搞定显卡驱动和显示" class="headerlink" title="开始让系统可用 — 搞定显卡驱动和显示"></a>开始让系统可用 — 搞定显卡驱动和显示</h2><p>无论是不是精简安装，应当都有火狐 (firefox) 浏览器，文件管理器 (files)，应用商店 (Ubuntu software)，和最重要的gnome终端 (terminal)。</p>
+<p>如果是外置Nvidia显卡的话，现在<em>可能</em>会画质很差，分辨率很低，字体很差。<em>无论是不是这样的情况</em>，都<em>最好</em>安装一下Nvidia的驱动。如果画面正常的话，可能是预装的<a href="https://en.wikipedia.org/wiki/X_Window_System" target="_blank" rel="noopener">xerver</a>上的<a href="https://en.wikipedia.org/wiki/Nouveau_%28software%29" target="_blank" rel="noopener">nouveau</a>起了作用，用<code>apt list --installed | grep nouveau</code>命令看一下，这里是有libdrm-nouveau2和xserver-xorg-video-nouveau-hwe-18.04两个东西。</p>
+<p>再<code>apt list --installed | grep nvidia</code>看一下，确认没有N卡驱动，如果有的话用<code>sudo apt purge nvidia*</code>彻底删除一下并重新启动。如果图形界面彻底进不了先不要慌，<code>Ctrl-Alt-F2</code>进命令行，输入用户名和密码登录。</p>
+<p>开始装显卡驱动。<code>sudo lshw -c display</code>能查看到一些显示信息。可以<code>ubuntu-drivers devices</code>查看识别了的硬件设备和对应的驱动。里面会有一个recommend的驱动，如果觉得可以就<code>ubuntu-drivers autoinstall</code>自动安装推荐驱动即可。想要从所有包里找的话就<code>apt search --names-only nvidia</code>看看现有的版本，一般不会有太大出入。如果觉得不够新可以使用第三方源，<code>sudo add-apt-repository ppa:graphics-drivers</code>，然后<code>sudo apt update</code>，然后再<code>ubuntu-drivers devices</code>或<code>apt search --names-only nvidia</code>，应当会有更新的版本。前者中推荐的驱动也可能会变成更新的，此时就可以自动或手动安装了。<code>sudo shutdown -r now</code>关机或者<code>reboot</code>重启。</p>
+<p>此时应当有良好的显示了。用<code>nvidia-smi</code>查看，能看到比较易读的显卡信息。貌似是默认带最新CUDA了。</p>
+<h2 id="显示缩放"><a href="#显示缩放" class="headerlink" title="显示缩放"></a>显示缩放</h2><p>现在都是高分辨率屏，难免会字体过小，而Ubuntu 18.04的缩放直接从100%跳到200%……好吧我们来装一个工具，<code>sudo apt install gnome-tweaks &amp;&amp; gnome-tweaks</code>，就能随便缩放啦。另外，再设置的Universal access里面可以调大一些的字体，和光标大小。注意调系统的设置可能会让tweaks的设置重置。</p>
+<h2 id="exFAT支持"><a href="#exFAT支持" class="headerlink" title="exFAT支持"></a>exFAT支持</h2><p>U盘常见有exFAT格式，这一格式在Mac和Windows上都能读写，而且也没有FAT32的4GB的单文件限制，但是Ubuntu 18.04没有默认支持。需要<code>sudo apt install exfat-fuse exfat-utils</code>，再插上U盘应当能正常使用。</p>
+<h2 id="中文输入法"><a href="#中文输入法" class="headerlink" title="中文输入法"></a>中文输入法</h2><p><code>sudo apt install ibus-pinyin</code>安装IBus拼音支持，或者喜欢别的就在apt里查一下。在设置—地区和语言 (region &amp; language)里面，先点管理已安装语言 (manage installed languages)，可能会提示安装一些语言的周边支持包，建议安装以提供完整支持。</p>
+<p>进入页面，下面有一个Keyboard input method，选择IBus，退出，重启。设置—地区和语言—输入源（Input sources），点加号，Chinese—Chinese (Intelligent Pinyin)，确认即可。</p>
+<h2 id="终端配色方案-—-solarized"><a href="#终端配色方案-—-solarized" class="headerlink" title="终端配色方案 —- solarized"></a>终端配色方案 —- solarized</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/aruhier/gnome-terminal-colors-solarized.git</span><br><span class="line"><span class="built_in">cd</span> gnome-terminal-colors-solarized/</span><br><span class="line">./install.sh</span><br></pre></td></tr></table></figure>
+<p>第二步文件夹名称太长怎么办？多按Tab！默认的shell就有一定的自动补全了。运行安装脚本之后根据导引选择。Solarized还有一个主仓库在<a href="https://github.com/altercation/solarized" target="_blank" rel="noopener">这里</a>。</p>
+<h2 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h2><p>然后就需要一款好用的文本编辑器了，我习惯用Vim。下面是Vim+Vundle的安装过程。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install vim</span><br><span class="line">mkdir -p ~/.vim/bundle</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim</span><br><span class="line">vim ~/.vimrc</span><br></pre></td></tr></table></figure>
+<p>先安装vim本体，建立bundle所有扩展包的文件夹，然后因为Vundle把自己也当成一个bundle，所以把Vundle本体拷进去。最后配置.vimrc文件，可以参照官方示例的格式。这就是个大坑了，如何找到好用的扩展包，如何配置扩展包，甚至自己写vim script（不会），本篇就不展开了，有需要的话我可以想办法发给你我的vimrc配置，用起来还比较顺手。</p>
+<h2 id="网络-—-基于vmess协议的v2ray"><a href="#网络-—-基于vmess协议的v2ray" class="headerlink" title="网络 —- 基于vmess协议的v2ray"></a>网络 —- 基于vmess协议的v2ray</h2><p>危险操作，小孩子和不懂事的大人不要模仿（不是）</p>
+<p>它有官网但显然是上不去的……经验告诉我们现在Github上搜，官方仓库在<a href="https://github.com/v2ray/v2ray-core" target="_blank" rel="noopener">这里</a>（居然不是排第一）。点进<a href="https://github.com/v2ray/v2ray-core/releases" target="_blank" rel="noopener">Releases</a>，下载<code>v2ray-linux-64.zip</code>即可，解压即可用，不需要安装。设置<code>config.json</code>，然后log的地址都可以删掉，让它输出到屏幕就行，如果你是前台运行的话。在命令行里运行<code>./v2ray -test</code>检查设置是否ok，然后<code>./v2ray</code>运行。</p>
+<p>相比SS/SSR我更推荐这个，因为现在SS查的比较严，即使用aes-256-gcm加密也不免在一段时间内被封（个人体验），这个目前来说还比较好用，可能是因为针对性开发的吧。它只会在持续大流量的时候被限制一段时间，解决方案就是先断一会儿再用。</p>
+<h3 id="插播广告-—-如何通过ssh密钥安全地登录上服务器"><a href="#插播广告-—-如何通过ssh密钥安全地登录上服务器" class="headerlink" title="插播广告 —- 如何通过ssh密钥安全地登录上服务器"></a>插播广告 —- 如何通过ssh密钥安全地登录上服务器</h3><p>挖坑。</p>
+<p>然后关于设置，篇幅原因没法都放，我就用我一点也没有的网络知识大致讲一下思路吧。浏览器出来的请求正常情况是直接按照地址往外发送，然后如果设置了代理的话就会发送到127.0.0.1也就是本机的对应端口，v2ray在输入inbounds端监听了127.0.0.1的对应端口，然后根据设置的规则给到outbounds端，outbounds的代理这个选项把数据发送到服务器端的对应端口。服务器端的vmess输入端设置端口、所有用户的uuid，就能够接收，然后服务器端的输出就是自由的，直连。</p>
+<p>同时v2ray也兼容ss的代理，所以服务器端可以设置两个端口，一个接收vmess输入，一个接收ss输入，这样在用户端也可以用ss来走代理，虽然这样是不建议的。</p>
+<p>然后先设置全局代理。什么？你想用Proxy SwitchyOmega？但它在google商店里啊。什么？你的账号安装过所以可以同步？但是你要登录google账号啊。好，我们打开设置—网络—代理—手动，HTTP和HTTPS代理都设置成127.0.0.1的你在config.json里设置的输入端口。对了你可能还没有chromium，开源的chrome，到应用商店里下载就行了。试一下google应该ok，在运行v2ray的那个terminal上应该有信息的显示（别给关了，关了就断掉了）。然后先登录google账号（这样之后能在设备间同步），再找<a href="chrome://extensions">chrome://extensions</a>，这里管理了你拥有的插件。点进google插件商店，下载Proxy SwitchyOmega。</p>
+<p>设置SwitchyOmega。proxy一栏选HTTP（HTTPS应该也行），服务器是127.0.0.1，端口还是系统代理那个端口。auto switch里面删掉所有的示例，勾选rule list rules，URL输<code>https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt</code>（就是github里面搜gfwlist，虽然github能上，但是github的raw是在墙外的……），点击下载。Format应当会自动切换到AutoProxy。上面调成匹配列表的就代理，不匹配的直连。至此，已经可以断掉系统代理了，别忘了断掉。调成自动切换模式，用google和baidu分别测试一下，有代理的就会有蓝圈。以后有网站上不去或很慢就点增加条件，让这个网站走代理。</p>
+<h2 id="更多…"><a href="#更多…" class="headerlink" title="更多…"></a>更多…</h2><p>更多的就需要根据个人需求慢慢学习安装啦~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/2020-1/" rel="tag"># 2020/1</a>
+          
+            <a href="/tags/weiz/" rel="tag"># weiz</a>
+          
+            <a href="/tags/%E8%A3%85%E6%9C%BA/" rel="tag"># 装机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/23/ubantu-1/" rel="next" title="Ubuntu 18.04.3 LTS 安装记录">
+                <i class="fa fa-chevron-left"></i> Ubuntu 18.04.3 LTS 安装记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2030/01/23/hi/" rel="prev" title="建站记录">
+                建站记录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">cyl</p>
+              <p class="site-description motion-element" itemprop="description">blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-18-04-3-LTS-配置记录"><span class="nav-number">1.</span> <span class="nav-text">Ubuntu 18.04.3 LTS 配置记录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#apt换清华源"><span class="nav-number">1.1.</span> <span class="nav-text">apt换清华源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#咦，好像没有git？"><span class="nav-number">1.2.</span> <span class="nav-text">咦，好像没有git？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始让系统可用-—-搞定显卡驱动和显示"><span class="nav-number">1.3.</span> <span class="nav-text">开始让系统可用 — 搞定显卡驱动和显示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#显示缩放"><span class="nav-number">1.4.</span> <span class="nav-text">显示缩放</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exFAT支持"><span class="nav-number">1.5.</span> <span class="nav-text">exFAT支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中文输入法"><span class="nav-number">1.6.</span> <span class="nav-text">中文输入法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#终端配色方案-—-solarized"><span class="nav-number">1.7.</span> <span class="nav-text">终端配色方案 —- solarized</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vim"><span class="nav-number">1.8.</span> <span class="nav-text">Vim</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络-—-基于vmess协议的v2ray"><span class="nav-number">1.9.</span> <span class="nav-text">网络 —- 基于vmess协议的v2ray</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#插播广告-—-如何通过ssh密钥安全地登录上服务器"><span class="nav-number">1.9.1.</span> <span class="nav-text">插播广告 —- 如何通过ssh密钥安全地登录上服务器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多…"><span class="nav-number">1.10.</span> <span class="nav-text">更多…</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cyl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
