@@ -81,12 +81,12 @@
 
 
 
-<meta name="description" content="不使用宝塔云  初衷 宝塔云虽然好用，但是有点low，而且每次都要重新解压什么的，更新起来不是很方便。如果不用宝塔云，理论上更新博客只需要在本地用一句 1hexo deploy 而且想借这个机会体验一下git的原理。 **事后:**其实最后我还是没学会git的原理（可能是懒吧  相关链接 将hexo部署到服务器 照着这个来基本是没问题的，然后碰到一些坑百度也可以解决（除非自己作死）  作死 在过">
+<meta name="description" content="不使用宝塔云  初衷 宝塔云虽然好用，但是有点low，而且每次都要重新解压什么的，更新起来不是很方便。如果不用宝塔云，理论上更新博客只需要在本地用一句 1hexo deploy 而且想借这个机会体验一下git的原理。 事后: 其实最后我还是没学会git的原理（可能是懒吧  相关链接 将hexo部署到服务器 照着这个来基本是没问题的，然后碰到一些坑百度也可以解决（除非自己作死）  作死 在过程中碰">
 <meta property="og:type" content="article">
 <meta property="og:title" content="不使用宝塔云">
 <meta property="og:url" content="whitychen.github.io/2020/01/28/%E4%B8%8D%E4%BD%BF%E7%94%A8%E5%AE%9D%E5%A1%94%E4%BA%91/index.html">
 <meta property="og:site_name" content="whitychen">
-<meta property="og:description" content="不使用宝塔云  初衷 宝塔云虽然好用，但是有点low，而且每次都要重新解压什么的，更新起来不是很方便。如果不用宝塔云，理论上更新博客只需要在本地用一句 1hexo deploy 而且想借这个机会体验一下git的原理。 **事后:**其实最后我还是没学会git的原理（可能是懒吧  相关链接 将hexo部署到服务器 照着这个来基本是没问题的，然后碰到一些坑百度也可以解决（除非自己作死）  作死 在过">
+<meta property="og:description" content="不使用宝塔云  初衷 宝塔云虽然好用，但是有点low，而且每次都要重新解压什么的，更新起来不是很方便。如果不用宝塔云，理论上更新博客只需要在本地用一句 1hexo deploy 而且想借这个机会体验一下git的原理。 事后: 其实最后我还是没学会git的原理（可能是懒吧  相关链接 将hexo部署到服务器 照着这个来基本是没问题的，然后碰到一些坑百度也可以解决（除非自己作死）  作死 在过程中碰">
 <meta property="article:published_time" content="2020-01-27T16:00:00.000Z">
 <meta property="article:modified_time" content="2020-01-27T16:00:00.000Z">
 <meta property="article:author" content="cyl">
@@ -102,10 +102,10 @@
     root: '/',
     scheme: 'Muse',
     version: '5.1.4',
-    sidebar: {"position":"left","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":true},
     fancybox: true,
     tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"fadeIn"}},
     duoshuo: {
       userId: '0',
       author: 'Author'
@@ -339,7 +339,7 @@
 <p>宝塔云虽然好用，但是有点low，而且每次都要重新解压什么的，更新起来不是很方便。如果不用宝塔云，理论上更新博客只需要在本地用一句</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
 <p>而且想借这个机会体验一下git的原理。<br>
-**事后:**其实最后我还是没学会git的原理（可能是懒吧</p>
+<strong>事后:</strong> 其实最后我还是没学会git的原理（可能是懒吧</p>
 <h2 id="相关链接"><a class="markdownIt-Anchor" href="#相关链接"></a> 相关链接</h2>
 <p><a href="https://blog.csdn.net/qq_35561857/article/details/81590953" target="_blank" rel="noopener">将hexo部署到服务器</a><br>
 照着这个来基本是没问题的，然后碰到一些坑百度也可以解决（除非自己作死）</p>
@@ -445,6 +445,8 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
     
     <div class="sidebar-inner">
 
